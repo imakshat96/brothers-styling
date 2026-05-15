@@ -1,8 +1,11 @@
-Replace the dot crosshair in `src/components/CustomCursor.tsx` with a gold scissors icon (Lucide `Scissors`).
+Add a cut/snip animation to the scissors cursor that triggers on every mouse click.
 
-- Keep the existing follow-the-mouse motion logic and outer ring.
-- Replace the inner solid dot with a `<Scissors />` SVG sized ~18px in gold (`#c8a951`), slightly rotated (-45°) so the blades point along the cursor direction.
-- Add a subtle scale/rotate tween on hover over interactive elements (reuse current hover state if present).
-- Hide native cursor as today; ensure scissors stays centered on the pointer via `translate(-50%, -50%)`.
+## Changes
+Edit only `src/components/CustomCursor.tsx`:
 
-No other components touched.
+1. Add a `cutting` state (boolean) and a `useAnimationControls()` instance from framer-motion for the scissors wrapper.
+2. Add a `mousedown` window listener that triggers a quick keyframe animation: rotate goes `[-45, -25, -45]` (or current rotation ±20°) and scale goes `[1, 0.85, 1]` over ~220ms with easeOut — simulating blades snapping shut then opening.
+3. Keep existing hover scale/rotate behavior; the click animation overrides briefly via `controls.start(...)` then returns to the hover/idle state.
+4. Optional polish: emit a tiny gold spark — a 6px ring that fades+scales out (`opacity 1→0`, `scale 0.5→1.6`, 300ms) at the click point, rendered as a sibling motion.div positioned at the cursor coords. Adds tactile feedback without changing layout.
+
+No other files touched. No new dependencies.
