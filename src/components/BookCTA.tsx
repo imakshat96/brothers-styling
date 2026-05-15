@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Phone, Suspense } from "lucide-react";
+import { Phone } from "lucide-react";
 import { lazy, Suspense as RSuspense } from "react";
 
 const HeroBackground = lazy(() => import("./HeroBackground").then(m => ({ default: m.HeroBackground })));
