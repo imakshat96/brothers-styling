@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="relative min-h-screen bg-obsidian text-white">
+    <div className="grain-fixed relative min-h-screen bg-obsidian text-foreground">
       <SmoothScroll />
       <CustomCursor />
       <Navbar />

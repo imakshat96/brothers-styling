@@ -28,8 +28,8 @@ export function Navbar() {
       className={`fixed inset-x-0 top-0 z-50 transition-all ${scrolled ? "glass" : "bg-transparent"}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#top" className="font-display text-2xl tracking-wider">
-          THE BROTHER'S <span className="text-gold italic font-serif font-semibold">Styling</span>
+        <a href="#top" className="font-display text-2xl uppercase tracking-tight">
+          The Brother's <span className="text-gold">Styling</span>
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -42,7 +42,7 @@ export function Navbar() {
 
         <a
           href="#book"
-          className="hidden rounded-sm bg-gold px-5 py-2.5 text-sm font-semibold uppercase tracking-widest text-obsidian transition hover:bg-gold-soft md:inline-block"
+          className="hidden border border-gold px-5 py-2.5 text-xs font-bold uppercase tracking-[0.3em] text-gold transition hover:bg-gold hover:text-obsidian md:inline-block"
         >
           Book Now
         </a>
@@ -60,7 +60,7 @@ export function Navbar() {
             className="fixed inset-0 z-50 bg-obsidian md:hidden"
           >
             <div className="flex items-center justify-between px-6 py-4">
-              <span className="font-display text-xl">THE BROTHER'S <span className="text-gold italic font-serif">Styling</span></span>
+              <span className="font-display text-xl uppercase">The Brother's <span className="text-gold">Styling</span></span>
               <button onClick={() => setOpen(false)} aria-label="Close"><X size={28} /></button>
             </div>
             <nav className="flex flex-col gap-6 px-8 pt-12">
@@ -69,7 +69,7 @@ export function Navbar() {
                   {l.label}
                 </a>
               ))}
-              <a href="#book" onClick={() => setOpen(false)} className="mt-6 inline-block w-fit rounded-sm bg-gold px-6 py-3 font-semibold uppercase tracking-widest text-obsidian">
+              <a href="#book" onClick={() => setOpen(false)} className="mt-6 inline-block w-fit border border-gold px-6 py-3 text-xs font-bold uppercase tracking-[0.3em] text-gold">
                 Book Now
               </a>
             </nav>
