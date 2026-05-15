@@ -1,11 +1,15 @@
-Add a cut/snip animation to the scissors cursor that triggers on every mouse click.
+The current click animation uses `useAnimationControls` alongside a separate hover-driven `controls.start` effect — the two compete and the snip gets canceled or never visibly plays.
 
-## Changes
-Edit only `src/components/CustomCursor.tsx`:
+## Fix
+Rewrite `src/components/CustomCursor.tsx` to drive the scissors with a single declarative `animate` prop based on state, no imperative controls:
 
-1. Add a `cutting` state (boolean) and a `useAnimationControls()` instance from framer-motion for the scissors wrapper.
-2. Add a `mousedown` window listener that triggers a quick keyframe animation: rotate goes `[-45, -25, -45]` (or current rotation ±20°) and scale goes `[1, 0.85, 1]` over ~220ms with easeOut — simulating blades snapping shut then opening.
-3. Keep existing hover scale/rotate behavior; the click animation overrides briefly via `controls.start(...)` then returns to the hover/idle state.
-4. Optional polish: emit a tiny gold spark — a 6px ring that fades+scales out (`opacity 1→0`, `scale 0.5→1.6`, 300ms) at the click point, rendered as a sibling motion.div positioned at the cursor coords. Adds tactile feedback without changing layout.
+- State: `hover: boolean`, `cutting: boolean`.
+- `animate` prop computes target from state:
+  - idle: `{ rotate: -45, scale: 1 }`
+  - hover: `{ rotate: -15, scale: 1.25 }`
+  - cutting (overrides): `{ rotate: [base, base+40, base], scale: [baseScale, 0.7, baseScale] }` with `duration: 0.28, ease: "easeOut"`.
+- On `mousedown`: set `cutting=true`; after 280ms `setTimeout`, set `cutting=false`. Use a ref to track timeout so rapid clicks reset cleanly.
+- Keep gold-spark ring at click coordinates (already working pattern).
+- Verify the listener attaches in capture phase (`window.addEventListener("mousedown", down, true)`) so SmoothScroll/Lenis or any `e.stopPropagation()` doesn't swallow it.
 
-No other files touched. No new dependencies.
+No other files touched.
