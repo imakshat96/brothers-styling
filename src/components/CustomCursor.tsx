@@ -17,21 +17,26 @@ export function CustomCursor() {
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     setEnabled(true);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
     const move = (e: MouseEvent) => { x.set(e.clientX); y.set(e.clientY); };
     const over = (e: MouseEvent) => {
       const t = e.target as HTMLElement | null;
       setHover(!!t?.closest("a, button, [role=button], input, textarea, select, label"));
     };
-    const down = (e: MouseEvent) => {
+    const down = async (e: MouseEvent) => {
       const base = hover ? -15 : -45;
-      controls.start({
-        rotate: [base, base + 30, base],
-        scale: [hover ? 1.25 : 1, 0.8, hover ? 1.25 : 1],
-        transition: { duration: 0.24, ease: "easeOut" },
-      });
+      const baseScale = hover ? 1.25 : 1;
       const id = Date.now() + Math.random();
       setSparks((s) => [...s, { id, x: e.clientX, y: e.clientY }]);
       setTimeout(() => setSparks((s) => s.filter((sp) => sp.id !== id)), 400);
+      await controls.start({
+        rotate: [base, base + 35, base],
+        scale: [baseScale, baseScale * 0.78, baseScale],
+        transition: { duration: 0.26, ease: "easeOut" },
+      });
     };
     window.addEventListener("mousemove", move);
     window.addEventListener("mouseover", over);
@@ -41,7 +46,16 @@ export function CustomCursor() {
       window.removeEventListener("mouseover", over);
       window.removeEventListener("mousedown", down);
     };
-  }, [x, y, hover, controls]);
+  }, [enabled, x, y, hover, controls]);
+
+  // Idle/hover state when not actively snipping
+  useEffect(() => {
+    controls.start({
+      rotate: hover ? -15 : -45,
+      scale: hover ? 1.25 : 1,
+      transition: { type: "spring", damping: 18, stiffness: 220 },
+    });
+  }, [hover, controls]);
 
   if (!enabled) return null;
   return (
@@ -56,12 +70,7 @@ export function CustomCursor() {
           className="-translate-x-1/2 -translate-y-1/2"
           style={{ filter: "drop-shadow(0 0 8px rgba(200,169,81,0.7))" }}
         >
-          <motion.div
-            animate={{ rotate: hover ? -15 : -45, scale: hover ? 1.25 : 1 }}
-            transition={{ type: "spring", damping: 18, stiffness: 220 }}
-          >
-            <Scissors size={22} strokeWidth={1.75} color="#c8a951" />
-          </motion.div>
+          <Scissors size={22} strokeWidth={1.75} color="#c8a951" />
         </motion.div>
       </motion.div>
       {sparks.map((s) => (
