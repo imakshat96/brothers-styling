@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowDown, Star } from "lucide-react";
 import heroImg from "@/assets/hero-portrait.jpg";
+import { OpenStatus } from "./OpenStatus";
 
 const line1 = "EVERY".split("");
 const line2 = "CUT IS A".split(" ");
@@ -18,10 +19,10 @@ export function Hero() {
       {/* Top meta bar */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-        className="absolute left-0 right-0 top-24 z-20 mx-auto flex max-w-7xl items-center justify-between px-6 text-[11px] uppercase tracking-[0.35em] text-white/50"
+        className="absolute left-0 right-0 top-24 z-20 mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 text-[11px] uppercase tracking-[0.35em] text-white/50"
       >
         <span>N° 001 — New Lambton</span>
-        <span className="hidden md:inline">Est. Newcastle · NSW 2305</span>
+        <OpenStatus />
         <span className="flex items-center gap-2 text-gold">
           <Star size={12} fill="#c8a951" stroke="#c8a951" /> 4.6 / 53 Reviews
         </span>
