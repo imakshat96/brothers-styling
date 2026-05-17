@@ -80,6 +80,20 @@
   animation: barberpole 3s linear infinite;
 }
 
+.hero-bg {
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+.hero-overlay {
+  background: linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.3) 100%);
+}
+@media (max-width: 767px) {
+  .hero-overlay {
+    background: rgba(0,0,0,0.82);
+  }
+}
+
 .text-gradient-gold {
   background: linear-gradient(135deg, #e6c878, #c8a951 50%, #8a6f2c);
   -webkit-background-clip: text;
