@@ -80,6 +80,21 @@
   animation: barberpole 3s linear infinite;
 }
 
+@keyframes barberpole-up {
+  from { background-position: 0 0; }
+  to { background-position: 0 -60px; }
+}
+.barber-pole-rwb {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #e63946 0 10px,
+    #ffffff 10px 20px,
+    #1d3557 20px 30px,
+    #ffffff 30px 40px
+  );
+  animation: barberpole-up 2.5s linear infinite;
+}
+
 .text-gradient-gold {
   background: linear-gradient(135deg, #e6c878, #c8a951 50%, #8a6f2c);
   -webkit-background-clip: text;
