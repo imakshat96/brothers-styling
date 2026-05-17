@@ -20,6 +20,13 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0 z-0">
         <HeroBackground />
       </div>
+
+      {/* Vertical RWB barber pole — right edge */}
+      <div
+        aria-hidden
+        className="barber-pole-rwb pointer-events-none absolute right-10 top-1/2 z-10 hidden -translate-y-1/2 rounded-full md:block"
+        style={{ width: "8px", height: "60%" }}
+      />
       {/* Top meta bar */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
