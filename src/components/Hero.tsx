@@ -12,14 +12,23 @@ export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 600], [0, 140]);
-  const imgY = useTransform(scrollY, [0, 800], [0, -80]);
   const opacity = useTransform(scrollY, [0, 500], [1, 0]);
 
   return (
-    <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden bg-obsidian pt-24">
-      <div className="pointer-events-none absolute inset-0 z-0">
+    <section
+      id="top"
+      ref={ref}
+      className="hero-bg relative min-h-screen w-full overflow-hidden bg-obsidian pt-24"
+      style={{ backgroundImage: `url(${heroImg})` }}
+    >
+      {/* Gradient overlay */}
+      <div className="hero-overlay pointer-events-none absolute inset-0 z-0" />
+
+      {/* Particle field */}
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-60">
         <HeroBackground />
       </div>
+
       {/* Top meta bar */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
@@ -32,9 +41,9 @@ export function Hero() {
         </span>
       </motion.div>
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl grid-cols-1 gap-8 px-6 pt-16 md:grid-cols-12 md:gap-10 md:pt-10">
+      <div className="relative mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl grid-cols-1 gap-8 px-6 pt-16 md:pt-10">
         {/* Left: typography */}
-        <motion.div style={{ y, opacity }} className="relative z-10 flex flex-col justify-center md:col-span-7">
+        <motion.div style={{ y, opacity }} className="relative z-10 flex flex-col justify-center">
           <motion.div
             initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.8, delay: 0.3 }}
             style={{ transformOrigin: "left" }}
@@ -45,7 +54,7 @@ export function Hero() {
             <div className="overflow-hidden">
               <motion.div
                 initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: 0.4 }}
-                className="text-[18vw] md:text-[10vw]"
+                className="text-[16vw] md:text-[10vw]"
               >
                 {line1.join("")}
               </motion.div>
@@ -54,7 +63,7 @@ export function Hero() {
             <div className="overflow-hidden">
               <motion.div
                 initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: 0.55 }}
-                className="flex flex-wrap items-baseline gap-x-[0.18em] text-[11vw] md:text-[6.2vw]"
+                className="flex flex-wrap items-baseline gap-x-[0.18em] text-[10vw] md:text-[6.2vw]"
               >
                 {line2.map((w) => <span key={w}>{w}</span>)}
               </motion.div>
@@ -63,7 +72,7 @@ export function Hero() {
             <div className="overflow-hidden">
               <motion.div
                 initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1], delay: 0.75 }}
-                className="font-serif italic text-gradient-gold text-[16vw] leading-[0.95] md:text-[9vw]"
+                className="font-serif italic text-gradient-gold text-[14vw] leading-[0.95] md:text-[9vw]"
               >
                 Masterpiece.
               </motion.div>
@@ -72,58 +81,22 @@ export function Hero() {
 
           <motion.p
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.6 }}
-            className="mt-10 max-w-md text-base leading-relaxed text-white/65 md:text-lg"
+            className="mt-8 max-w-md text-sm leading-relaxed text-white/75 md:mt-10 md:text-lg"
           >
             Premium fades, beard grooming & styling — New Lambton's finest barbershop, crafted by hands that care about the details.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.45, duration: 0.6 }}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center md:mt-10"
           >
-            <a href="#book" className="rounded-sm bg-gold px-8 py-4 text-xs font-bold uppercase tracking-[0.3em] text-obsidian transition hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(200,169,81,0.5)]">
+            <a href="#book" className="rounded-sm bg-gold px-8 py-4 text-center text-xs font-bold uppercase tracking-[0.3em] text-obsidian transition hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(200,169,81,0.5)]">
               Book Appointment
             </a>
-            <a href="#services" className="group flex items-center gap-3 px-2 py-4 text-xs font-bold uppercase tracking-[0.3em] text-white/80 transition hover:text-gold">
+            <a href="#services" className="group flex items-center justify-center gap-3 px-2 py-4 text-xs font-bold uppercase tracking-[0.3em] text-white/80 transition hover:text-gold sm:justify-start">
               View Services
               <span className="h-px w-10 bg-current transition-all group-hover:w-16" />
             </a>
-          </motion.div>
-        </motion.div>
-
-        {/* Right: editorial image with barber pole */}
-        <motion.div
-          initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, delay: 0.2 }}
-          className="relative z-10 hidden md:col-span-5 md:block"
-        >
-          <motion.div style={{ y: imgY }} className="relative h-full min-h-[560px]">
-            {/* Frame */}
-            <div className="absolute -left-4 -top-4 h-full w-full border border-gold/40" />
-            <div className="relative h-full w-full overflow-hidden">
-              <img
-                src={heroImg}
-                alt="Precision skin fade haircut"
-                width={1024}
-                height={1280}
-                className="h-full w-full object-cover grayscale-[20%] contrast-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/10 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-obsidian/40 to-transparent" />
-            </div>
-
-            {/* Vertical barber pole */}
-            <div className="absolute -right-3 top-0 h-full w-2 overflow-hidden rounded-full">
-              <div className="barber-pole h-full w-full" />
-            </div>
-
-            {/* Caption */}
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
-              className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-[10px] uppercase tracking-[0.3em] text-white/70"
-            >
-              <span>Skin Fade · Signature Cut</span>
-              <span className="text-gold">/ 01</span>
-            </motion.div>
           </motion.div>
         </motion.div>
       </div>
