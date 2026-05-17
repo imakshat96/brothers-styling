@@ -9,6 +9,7 @@ import { BookCTA } from "@/components/BookCTA";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
+import { FloatingCall } from "@/components/FloatingCall";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -35,6 +36,7 @@ function Index() {
       <Reviews />
       <BookCTA />
       <Footer />
+      <FloatingCall />
     </div>
   );
 }
