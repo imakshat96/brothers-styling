@@ -36,8 +36,8 @@ export function About() {
 
         <div className="grid items-start gap-16 md:grid-cols-2">
           <motion.div
-            initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7 }}
+            initial={{ opacity: 0, x: -80 }} whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <h2 className="font-display text-5xl leading-[0.95] tracking-tight md:text-7xl">
               MORE THAN <br /> JUST A <span className="text-gradient-gold font-serif italic">Haircut</span>

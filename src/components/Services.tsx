@@ -57,10 +57,10 @@ export function Services() {
     <section id="services" className="relative px-6 py-28 md:py-36">
       <div className="mx-auto max-w-7xl">
         <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7 }}
+          initial={{ opacity: 0, x: -80 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="mb-16 font-display text-6xl tracking-tight md:text-8xl"
         >
           OUR <span className="text-gradient-gold font-serif italic">Services</span>
