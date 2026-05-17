@@ -99,16 +99,17 @@ export function Hero() {
           <motion.div style={{ y: imgY }} className="relative h-full min-h-[560px]">
             {/* Frame */}
             <div className="absolute -left-4 -top-4 h-full w-full border border-gold/40" />
-            <div className="relative h-full w-full overflow-hidden">
-              <img
-                src={heroImg}
-                alt="Precision skin fade haircut"
-                width={1024}
-                height={1280}
-                className="h-full w-full object-cover grayscale-[20%] contrast-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/10 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-obsidian/40 to-transparent" />
+
+            {/* Ambient gold glow behind the art */}
+            <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
+              <div className="h-[70%] w-[70%] rounded-full bg-gold/25 blur-[120px]" />
+            </div>
+
+            <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-obsidian-2 via-obsidian to-black">
+              <div className="absolute inset-0 flex items-center justify-center p-8">
+                <ScissorsArt />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-transparent" />
             </div>
 
             {/* Vertical barber pole */}
