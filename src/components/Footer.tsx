@@ -5,8 +5,8 @@ export function Footer() {
     <footer className="border-t border-gold/15 bg-obsidian-2 px-6 py-16">
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-3">
         <div>
-          <div className="font-display text-2xl tracking-wider text-gold">
-            THE BROTHER'S <span className="font-serif italic">Styling</span>
+          <div className="font-display text-2xl tracking-wider">
+            <span className="font-serif italic font-semibold text-gold">The</span> BROTHER'S <span className="font-serif italic font-semibold text-gold">Styling</span>
           </div>
           <p className="mt-4 max-w-xs text-sm text-white/60">New Lambton's Premier Barbershop.</p>
           <div className="mt-6 flex gap-3">
