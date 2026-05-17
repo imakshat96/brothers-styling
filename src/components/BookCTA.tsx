@@ -13,8 +13,8 @@ export function BookCTA() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8 }}
+        initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 mx-auto max-w-5xl px-6 text-center"
       >
         <h2 className="font-display text-6xl leading-[0.95] tracking-tight md:text-9xl">
