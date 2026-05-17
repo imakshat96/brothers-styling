@@ -1,15 +1,15 @@
-The current click animation uses `useAnimationControls` alongside a separate hover-driven `controls.start` effect — the two compete and the snip gets canceled or never visibly plays.
+Update the logo wordmark in `src/components/Navbar.tsx` so the word "The" matches the styling of "Styling" (italic serif, gold accent).
 
-## Fix
-Rewrite `src/components/CustomCursor.tsx` to drive the scissors with a single declarative `animate` prop based on state, no imperative controls:
+Currently:
+```
+THE BROTHER'S <span class="text-gold italic font-serif font-semibold">Styling</span>
+```
 
-- State: `hover: boolean`, `cutting: boolean`.
-- `animate` prop computes target from state:
-  - idle: `{ rotate: -45, scale: 1 }`
-  - hover: `{ rotate: -15, scale: 1.25 }`
-  - cutting (overrides): `{ rotate: [base, base+40, base], scale: [baseScale, 0.7, baseScale] }` with `duration: 0.28, ease: "easeOut"`.
-- On `mousedown`: set `cutting=true`; after 280ms `setTimeout`, set `cutting=false`. Use a ref to track timeout so rapid clicks reset cleanly.
-- Keep gold-spark ring at click coordinates (already working pattern).
-- Verify the listener attaches in capture phase (`window.addEventListener("mousedown", down, true)`) so SmoothScroll/Lenis or any `e.stopPropagation()` doesn't swallow it.
+Change to wrap "The" in the same serif/italic/gold span, keeping "BROTHER'S" in the display font:
+```
+<span class="text-gold italic font-serif font-semibold">The</span> BROTHER'S <span class="text-gold italic font-serif font-semibold">Styling</span>
+```
 
-No other files touched.
+Apply the same change to the mobile menu header inside the same file.
+
+No other files affected.

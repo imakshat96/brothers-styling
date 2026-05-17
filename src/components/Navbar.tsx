@@ -29,7 +29,7 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#top" className="font-display text-2xl tracking-wider">
-          THE BROTHER'S <span className="text-gold italic font-serif font-semibold">Styling</span>
+          <span className="text-gold italic font-serif font-semibold">The</span> BROTHER'S <span className="text-gold italic font-serif font-semibold">Styling</span>
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -60,7 +60,7 @@ export function Navbar() {
             className="fixed inset-0 z-50 bg-obsidian md:hidden"
           >
             <div className="flex items-center justify-between px-6 py-4">
-              <span className="font-display text-xl">THE BROTHER'S <span className="text-gold italic font-serif">Styling</span></span>
+              <span className="font-display text-xl"><span className="text-gold italic font-serif">The</span> BROTHER'S <span className="text-gold italic font-serif">Styling</span></span>
               <button onClick={() => setOpen(false)} aria-label="Close"><X size={28} /></button>
             </div>
             <nav className="flex flex-col gap-6 px-8 pt-12">
