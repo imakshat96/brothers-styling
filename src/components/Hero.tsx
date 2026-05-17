@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { ArrowDown, Star } from "lucide-react";
 import heroImg from "@/assets/hero-portrait.jpg";
 import { OpenStatus } from "./OpenStatus";
+import { HeroBackground } from "./HeroBackground";
 
 const line1 = "EVERY".split("");
 const line2 = "CUT IS A".split(" ");
