@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowDown, Star } from "lucide-react";
+import heroImg from "@/assets/hero-portrait.jpg";
 import { OpenStatus } from "./OpenStatus";
 import { HeroBackground } from "./HeroBackground";
-import { ScissorsArt } from "./ScissorsArt";
 
 const line1 = "EVERY".split("");
 const line2 = "CUT IS A".split(" ");
@@ -99,17 +99,16 @@ export function Hero() {
           <motion.div style={{ y: imgY }} className="relative h-full min-h-[560px]">
             {/* Frame */}
             <div className="absolute -left-4 -top-4 h-full w-full border border-gold/40" />
-
-            {/* Ambient gold glow behind the art */}
-            <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
-              <div className="h-[70%] w-[70%] rounded-full bg-gold/25 blur-[120px]" />
-            </div>
-
-            <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-obsidian-2 via-obsidian to-black">
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <ScissorsArt />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-transparent" />
+            <div className="relative h-full w-full overflow-hidden">
+              <img
+                src={heroImg}
+                alt="Precision skin fade haircut"
+                width={1024}
+                height={1280}
+                className="h-full w-full object-cover grayscale-[20%] contrast-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-obsidian/40 to-transparent" />
             </div>
 
             {/* Vertical barber pole */}
@@ -122,7 +121,7 @@ export function Hero() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
               className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-[10px] uppercase tracking-[0.3em] text-white/70"
             >
-              <span>Signature Tools · Crafted Cuts</span>
+              <span>Skin Fade · Signature Cut</span>
               <span className="text-gold">/ 01</span>
             </motion.div>
           </motion.div>
