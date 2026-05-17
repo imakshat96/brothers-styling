@@ -7,5 +7,5 @@
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/_shell.html"
   status = 200
