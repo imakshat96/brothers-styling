@@ -136,26 +136,28 @@ export function LoadingScreen() {
             <p
               style={{
                 fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 28,
-                letterSpacing: "0.2em",
-                color: "#ffffff",
-                lineHeight: 1.1,
+                fontSize: 30,
+                letterSpacing: "0.18em",
+                lineHeight: 1.15,
                 margin: 0,
+                color: "#ffffff",
               }}
             >
-              THE BROTHER'S
+              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", color: "#c8a951", letterSpacing: "0.05em" }}>The </span>
+              BROTHER'S
             </p>
             <p
               style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 28,
-                letterSpacing: "0.2em",
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: 36,
+                letterSpacing: "0.08em",
                 color: "#c8a951",
                 lineHeight: 1.1,
                 margin: 0,
               }}
             >
-              STYLING
+              Styling
             </p>
           </motion.div>
 
