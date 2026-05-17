@@ -10,8 +10,8 @@ export function Footer() {
           </div>
           <p className="mt-4 max-w-xs text-sm text-white/60">New Lambton's Premier Barbershop.</p>
           <div className="mt-6 flex gap-3">
-            <a href="#" aria-label="Instagram" className="rounded-sm border border-white/15 p-2.5 text-white/70 transition hover:border-gold hover:text-gold"><Instagram size={18} /></a>
-            <a href="#" aria-label="Facebook" className="rounded-sm border border-white/15 p-2.5 text-white/70 transition hover:border-gold hover:text-gold"><Facebook size={18} /></a>
+            <a href="https://www.instagram.com/thebrothersstyling/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="rounded-sm border border-white/15 p-2.5 text-white/70 transition hover:border-gold hover:text-gold"><Instagram size={18} /></a>
+            <a href="https://www.facebook.com/p/The-Brothers-Styling-61580347974769/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="rounded-sm border border-white/15 p-2.5 text-white/70 transition hover:border-gold hover:text-gold"><Facebook size={18} /></a>
           </div>
         </div>
 

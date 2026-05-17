@@ -46,7 +46,13 @@ function Card({ s, i }: { s: typeof services[number]; i: number }) {
       <p className="mt-3 text-sm leading-relaxed text-white/60">{s.desc}</p>
       <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
         <span className="font-serif italic text-gold">{s.price}</span>
-        <span className="text-xs uppercase tracking-widest text-white/40 transition group-hover:text-gold">Book →</span>
+        <a
+          href="#book"
+          className="text-xs uppercase tracking-widest text-white/40 transition group-hover:text-gold"
+          onClick={(e) => e.stopPropagation()}
+        >
+          Book →
+        </a>
       </div>
     </motion.div>
   );

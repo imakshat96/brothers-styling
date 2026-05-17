@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import heroImg from "../assets/hero-trial2.jpg";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 function NotFoundComponent() {
   return (
@@ -119,6 +120,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LoadingScreen />
       <Outlet />
     </QueryClientProvider>
   );
