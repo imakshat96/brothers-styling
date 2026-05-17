@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowDown, Star } from "lucide-react";
-import heroImg from "@/assets/hero-portrait.jpg";
+import heroImg from "@/assets/hero-trial2.jpg";
 import { OpenStatus } from "./OpenStatus";
 import { HeroBackground } from "./HeroBackground";
 
