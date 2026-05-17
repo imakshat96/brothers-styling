@@ -122,7 +122,7 @@ export function Hero() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
               className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-[10px] uppercase tracking-[0.3em] text-white/70"
             >
-              <span>Skin Fade · Signature Cut</span>
+              <span>Signature Tools · Crafted Cuts</span>
               <span className="text-gold">/ 01</span>
             </motion.div>
           </motion.div>
