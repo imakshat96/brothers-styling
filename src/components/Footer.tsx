@@ -28,7 +28,14 @@ export function Footer() {
           <h4 className="font-display text-xl tracking-widest text-white">Find Us</h4>
           <ul className="mt-5 space-y-3 text-sm text-white/70">
             <li className="flex gap-3"><MapPin size={16} className="mt-0.5 shrink-0 text-gold" /> Shop 2/74 Orchardtown Road, New Lambton NSW 2305</li>
-            <li className="flex gap-3"><Clock size={16} className="mt-0.5 shrink-0 text-gold" /> Open daily 11am – 9pm</li>
+            <li className="flex gap-3">
+              <Clock size={16} className="mt-0.5 shrink-0 text-gold" />
+              <div className="space-y-1">
+                <div>Mon, Wed – Sat <span className="text-white/50">· 11am – 9pm</span></div>
+                <div>Sunday <span className="text-white/50">· 11am – 7:20pm</span></div>
+                <div>Tuesday <span className="text-red-400/70">· Closed</span></div>
+              </div>
+            </li>
             <li className="flex gap-3"><Phone size={16} className="mt-0.5 shrink-0 text-gold" /> <a href="tel:0249698123" className="hover:text-gold">(02) 4969 8123</a></li>
             <li>
               <a href="https://maps.google.com/?q=Shop+2%2F74+Orchardtown+Road,+New+Lambton+NSW+2305" target="_blank" rel="noopener noreferrer" className="text-gold underline-offset-4 hover:underline">

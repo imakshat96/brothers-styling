@@ -1,13 +1,27 @@
 import { useEffect, useState } from "react";
 
+// 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
+// null = closed all day; otherwise open/close in total minutes from midnight
+const SCHEDULE: Record<number, { open: number; close: number } | null> = {
+  0: { open: 11 * 60,       close: 19 * 60 + 20 }, // Sun  11am – 7:20pm
+  1: { open: 11 * 60,       close: 21 * 60 },       // Mon  11am – 9pm
+  2: null,                                            // Tue  Closed
+  3: { open: 11 * 60,       close: 21 * 60 },       // Wed  11am – 9pm
+  4: { open: 11 * 60,       close: 21 * 60 },       // Thu  11am – 9pm
+  5: { open: 11 * 60,       close: 21 * 60 },       // Fri  11am – 9pm
+  6: { open: 11 * 60,       close: 21 * 60 },       // Sat  11am – 9pm
+};
+
 function getSydneyParts() {
   const fmt = new Intl.DateTimeFormat("en-AU", {
     timeZone: "Australia/Sydney",
-    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
+    weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false,
   });
   const parts = fmt.formatToParts(new Date());
   const get = (t: string) => Number(parts.find(p => p.type === t)?.value ?? 0);
-  return { h: get("hour"), m: get("minute"), s: get("second") };
+  const weekday = parts.find(p => p.type === "weekday")?.value ?? "";
+  const dayIndex = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(weekday);
+  return { h: get("hour"), m: get("minute"), s: get("second"), day: dayIndex };
 }
 
 function formatDisplay(h: number, m: number) {
@@ -24,8 +38,11 @@ export function OpenStatus() {
     return () => clearInterval(id);
   }, []);
 
-  // Open daily 11am – 9pm Sydney time
-  const isOpen = now.h >= 11 && now.h < 21;
+  const todaySchedule = SCHEDULE[now.day];
+  const totalMin = now.h * 60 + now.m;
+  const isOpen = todaySchedule !== null &&
+    totalMin >= todaySchedule.open &&
+    totalMin < todaySchedule.close;
 
   return (
     <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.35em]">
