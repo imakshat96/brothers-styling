@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { ArrowDown, Star } from "lucide-react";
 import heroImg from "@/assets/hero-portrait.jpg";
 import { OpenStatus } from "./OpenStatus";
+import { HeroBackground } from "./HeroBackground";
 
 const line1 = "EVERY".split("");
 const line2 = "CUT IS A".split(" ");
@@ -16,6 +17,9 @@ export function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden bg-obsidian pt-24">
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <HeroBackground />
+      </div>
       {/* Top meta bar */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}

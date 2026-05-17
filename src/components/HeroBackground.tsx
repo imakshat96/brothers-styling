@@ -4,21 +4,35 @@ import * as THREE from "three";
 
 function Particles() {
   const ref = useRef<THREE.Points>(null);
+
   const positions = useMemo(() => {
-    const arr = new Float32Array(1500 * 3);
-    for (let i = 0; i < 1500; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 20;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 20;
+    const arr = new Float32Array(800 * 3);
+    for (let i = 0; i < 800; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 18;
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 12;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 14;
     }
     return arr;
   }, []);
 
-  useFrame((_, dt) => {
-    if (ref.current) {
-      ref.current.rotation.y += dt * 0.04;
-      ref.current.rotation.x += dt * 0.015;
+  const seeds = useMemo(() => {
+    const arr = new Float32Array(800);
+    for (let i = 0; i < 800; i++) arr[i] = Math.random() * Math.PI * 2;
+    return arr;
+  }, []);
+
+  useFrame((state, dt) => {
+    if (!ref.current) return;
+    ref.current.rotation.y += dt * 0.02;
+
+    const geom = ref.current.geometry as THREE.BufferGeometry;
+    const pos = geom.attributes.position as THREE.BufferAttribute;
+    const t = state.clock.elapsedTime;
+    for (let i = 0; i < 800; i++) {
+      const i3 = i * 3;
+      pos.array[i3 + 1] += Math.sin(t * 0.2 + seeds[i]) * 0.0015;
     }
+    pos.needsUpdate = true;
   });
 
   return (
@@ -26,37 +40,16 @@ function Particles() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial color="#c8a951" size={0.035} sizeAttenuation transparent opacity={0.85} />
+      <pointsMaterial
+        color="#c8a951"
+        size={0.04}
+        sizeAttenuation
+        transparent
+        opacity={0.9}
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
     </points>
-  );
-}
-
-function FloatingShapes() {
-  const group = useRef<THREE.Group>(null);
-  useFrame((state) => {
-    if (group.current) {
-      group.current.rotation.y = state.clock.elapsedTime * 0.1;
-      group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2) * 0.2;
-    }
-  });
-  const items = useMemo(() => Array.from({ length: 6 }, (_, i) => ({
-    pos: [
-      Math.cos((i / 6) * Math.PI * 2) * 4,
-      Math.sin((i / 6) * Math.PI * 2) * 2,
-      -2 - i * 0.5,
-    ] as [number, number, number],
-    scale: 0.4 + Math.random() * 0.4,
-  })), []);
-
-  return (
-    <group ref={group}>
-      {items.map((it, i) => (
-        <mesh key={i} position={it.pos} scale={it.scale}>
-          <icosahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color="#c8a951" wireframe metalness={0.7} roughness={0.2} />
-        </mesh>
-      ))}
-    </group>
   );
 }
 
@@ -67,11 +60,10 @@ export function HeroBackground() {
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true }}
       className="!absolute inset-0"
+      style={{ opacity: 0.6 }}
     >
       <ambientLight intensity={0.4} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#c8a951" />
       <Particles />
-      <FloatingShapes />
     </Canvas>
   );
 }
