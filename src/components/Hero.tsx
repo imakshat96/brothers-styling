@@ -17,6 +17,9 @@ export function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden bg-obsidian pt-24">
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <HeroBackground />
+      </div>
       {/* Top meta bar */}
       <motion.div
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
