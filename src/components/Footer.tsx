@@ -1,53 +1,69 @@
-import { Instagram, Facebook, MapPin, Clock, Phone } from "lucide-react";
+import { Instagram, Facebook } from "lucide-react";
+import logo from "../assets/logo.webp";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gold/15 bg-obsidian-2 px-6 py-16">
-      <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-3">
+    <footer className="border-t border-gold/15 bg-obsidian-2 px-6 py-12">
+      <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3">
+
+        {/* Brand */}
         <div>
-          <div className="font-display text-2xl tracking-wider">
-            <span className="font-serif italic font-semibold text-gold">The</span> BROTHER'S <span className="font-serif italic font-semibold text-gold">Styling</span>
-          </div>
-          <p className="mt-4 max-w-xs text-sm text-white/60">New Lambton's Premier Barbershop.</p>
-          <div className="mt-6 flex gap-3">
-            <a href="https://www.instagram.com/thebrothersstyling/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="rounded-sm border border-white/15 p-2.5 text-white/70 transition hover:border-gold hover:text-gold"><Instagram size={18} /></a>
-            <a href="https://www.facebook.com/p/The-Brothers-Styling-61580347974769/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="rounded-sm border border-white/15 p-2.5 text-white/70 transition hover:border-gold hover:text-gold"><Facebook size={18} /></a>
+          <img src={logo} alt="The Brother's Styling" className="h-32 md:h-40 object-contain" />
+          <p className="mt-3 max-w-xs text-sm text-white/55">New Lambton's premier barbershop & hair salon.</p>
+          <div className="mt-5 flex gap-3">
+            <a href="https://www.instagram.com/thebrothersstyling/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="rounded-sm border border-white/15 p-2.5 text-white/60 transition hover:border-gold hover:text-gold">
+              <Instagram size={18} />
+            </a>
+            <a href="https://www.facebook.com/p/The-Brothers-Styling-61580347974769/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="rounded-sm border border-white/15 p-2.5 text-white/60 transition hover:border-gold hover:text-gold">
+              <Facebook size={18} />
+            </a>
           </div>
         </div>
 
+        {/* Quick links */}
         <div>
-          <h4 className="font-display text-xl tracking-widest text-white">Quick Links</h4>
-          <ul className="mt-5 space-y-3 text-sm">
-            {[["Services", "#services"], ["Gallery", "#gallery"], ["Reviews", "#reviews"], ["Book", "#book"]].map(([l, h]) => (
-              <li key={l}><a href={h} className="text-white/60 transition hover:text-gold">{l}</a></li>
+          <h4 className="font-display text-lg tracking-widest text-white">Quick Links</h4>
+          <ul className="mt-4 space-y-2.5 text-sm">
+            {[
+              ["Women's Services", "#womens-services"],
+              ["Men's Services", "#services"],
+              ["Our Work", "#gallery"],
+              ["Reviews", "#reviews"],
+              ["Contact", "#contact"],
+            ].map(([l, h]) => (
+              <li key={l}><a href={h} className="text-white/55 transition hover:text-gold">{l}</a></li>
             ))}
           </ul>
         </div>
 
+        {/* Follow */}
         <div>
-          <h4 className="font-display text-xl tracking-widest text-white">Find Us</h4>
-          <ul className="mt-5 space-y-3 text-sm text-white/70">
-            <li className="flex gap-3"><MapPin size={16} className="mt-0.5 shrink-0 text-gold" /> Shop 2/74 Orchardtown Road, New Lambton NSW 2305</li>
-            <li className="flex gap-3">
-              <Clock size={16} className="mt-0.5 shrink-0 text-gold" />
-              <div className="space-y-1">
-                <div>Mon, Wed – Sat <span className="text-white/50">· 11am – 9pm</span></div>
-                <div>Sunday <span className="text-white/50">· 11am – 7:20pm</span></div>
-                <div>Tuesday <span className="text-red-400/70">· Closed</span></div>
-              </div>
-            </li>
-            <li className="flex gap-3"><Phone size={16} className="mt-0.5 shrink-0 text-gold" /> <a href="tel:0249698123" className="hover:text-gold">(02) 4969 8123</a></li>
-            <li>
-              <a href="https://maps.google.com/?q=Shop+2%2F74+Orchardtown+Road,+New+Lambton+NSW+2305" target="_blank" rel="noopener noreferrer" className="text-gold underline-offset-4 hover:underline">
-                View on Google Maps →
-              </a>
-            </li>
-          </ul>
+          <h4 className="font-display text-lg tracking-widest text-white">Follow Our Work</h4>
+          <p className="mt-4 text-sm text-white/55">See daily transformations on Instagram — reels, before & afters, and more.</p>
+          <a
+            href="https://www.instagram.com/thebrothersstyling/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 text-sm text-gold transition hover:text-gold-soft"
+          >
+            <Instagram size={15} />
+            @thebrothersstyling
+          </a>
+
+          <div className="mt-6">
+            <a
+              href="/booking"
+              className="inline-block rounded-sm bg-gold px-5 py-2.5 text-xs font-bold uppercase tracking-[0.25em] text-obsidian transition hover:bg-gold-soft"
+            >
+              Book Now
+            </a>
+          </div>
         </div>
+
       </div>
 
-      <div className="mx-auto mt-16 max-w-7xl border-t border-white/10 pt-6 text-center text-xs text-white/50">
-        © 2025 The Brother's Styling · Built with <span className="text-gold">❤</span> in Newcastle
+      <div className="mx-auto mt-12 max-w-7xl border-t border-white/10 pt-6 text-center text-xs text-white/40">
+        © 2025 The Brother's Styling · New Lambton NSW · Built with <span className="text-gold">❤</span> in Newcastle
       </div>
     </footer>
   );

@@ -17,10 +17,9 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
 }
 
 const stats = [
-  { val: 53, suffix: "+", label: "Google Reviews" },
-  { val: 4.6, suffix: "★", label: "Rating", float: true },
+  { val: 4.6, suffix: "★", label: "Google Rating", float: true },
   { val: 5, suffix: "+", label: "Years Experience" },
-  { val: 11, suffix: "–9pm", label: "Daily Hours", prefix: "" },
+  { val: 11, suffix: "–9pm", label: "Daily Hours" },
 ];
 
 export function About() {
@@ -55,7 +54,7 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.6, delay: i * 0.12 }}
-                className="rounded-md border border-white/10 bg-obsidian-2 p-8"
+                className={`rounded-md border border-white/10 bg-obsidian-2 p-8 ${i === 2 ? "col-span-2" : ""}`}
               >
                 <div className="font-display text-5xl text-gold md:text-6xl">
                   {s.label === "Daily Hours" ? "11am–9pm" : (

@@ -60,7 +60,7 @@ export function Reviews() {
           <span className="text-[#4285F4]">G</span><span className="text-[#EA4335]">o</span><span className="text-[#FBBC05]">o</span><span className="text-[#4285F4]">g</span><span className="text-[#34A853]">l</span><span className="text-[#EA4335]">e</span>
         </span>
         <span className="h-4 w-px bg-white/20" />
-        <span className="text-sm tracking-widest text-white/80">4.6 ★ · 53 Reviews</span>
+        <span className="text-sm tracking-widest text-white/80">4.6 ★ Google Rating</span>
       </motion.div>
     </section>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "../assets/logo.webp";
 
 const DISPLAY_MS = 2500;
 
@@ -133,32 +134,11 @@ export function LoadingScreen() {
             transition={{ duration: 0.5, delay: 0.3 }}
             style={{ textAlign: "center", marginBottom: 40 }}
           >
-            <p
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: 30,
-                letterSpacing: "0.18em",
-                lineHeight: 1.15,
-                margin: 0,
-                color: "#ffffff",
-              }}
-            >
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", color: "#c8a951", letterSpacing: "0.05em" }}>The </span>
-              BROTHER'S
-            </p>
-            <p
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: 36,
-                letterSpacing: "0.08em",
-                color: "#c8a951",
-                lineHeight: 1.1,
-                margin: 0,
-              }}
-            >
-              Styling
-            </p>
+            <img
+              src={logo}
+              alt="The Brother's Styling"
+              className="w-64 md:w-80 object-contain animate-pulse"
+            />
           </motion.div>
 
           {/* ── Clipper animation area ── */}

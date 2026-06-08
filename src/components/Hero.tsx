@@ -5,8 +5,8 @@ import heroImg from "@/assets/hero-trial2.jpg";
 import { OpenStatus } from "./OpenStatus";
 import { HeroBackground } from "./HeroBackground";
 
-const line1 = "EVERY".split("");
-const line2 = "CUT IS A".split(" ");
+const line1 = "PREMIUM".split("");
+const line2 = "BARBERING &".split(" ");
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -37,24 +37,36 @@ export function Hero() {
         <span>N° 001 — New Lambton</span>
         <OpenStatus />
         <span className="flex items-center gap-2 text-gold">
-          <Star size={12} fill="#c8a951" stroke="#c8a951" /> 4.6 / 53 Reviews
+          <Star size={12} fill="#c8a951" stroke="#c8a951" /> 4.6 Google Rating
         </span>
       </motion.div>
 
       <div className="relative mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl grid-cols-1 gap-8 px-6 pt-16 md:pt-10">
         {/* Left: typography */}
         <motion.div style={{ y, opacity }} className="relative z-10 flex flex-col justify-center">
+
+          {/* Gold line */}
           <motion.div
             initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.8, delay: 0.3 }}
             style={{ transformOrigin: "left" }}
-            className="mb-8 h-px w-24 bg-gold"
+            className="mb-4 h-px w-20 bg-gold"
           />
 
-          <h1 className="font-display leading-[0.82] tracking-tight">
+          {/* Badge pill */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}
+            className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-gold/50 bg-gold/10 px-4 py-1.5"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">Brunette Colour Specialist</span>
+          </motion.div>
+
+          {/* Headline */}
+          <h1 className="font-display leading-[0.88] tracking-tight">
             <div className="overflow-hidden">
               <motion.div
-                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: 0.4 }}
-                className="text-[16vw] md:text-[10vw]"
+                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: 0.55 }}
+                className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl"
               >
                 {line1.join("")}
               </motion.div>
@@ -62,8 +74,8 @@ export function Hero() {
 
             <div className="overflow-hidden">
               <motion.div
-                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: 0.55 }}
-                className="flex flex-wrap items-baseline gap-x-[0.18em] text-[10vw] md:text-[6.2vw]"
+                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1], delay: 0.7 }}
+                className="flex flex-wrap items-baseline gap-x-[0.15em] text-3xl md:text-5xl lg:text-6xl xl:text-7xl"
               >
                 {line2.map((w) => <span key={w}>{w}</span>)}
               </motion.div>
@@ -71,40 +83,59 @@ export function Hero() {
 
             <div className="overflow-hidden">
               <motion.div
-                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1], delay: 0.75 }}
-                className="font-serif italic text-gradient-gold text-[14vw] leading-[0.95] md:text-[9vw]"
+                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1], delay: 0.85 }}
+                className="font-serif italic text-gradient-gold text-4xl leading-[1.05] md:text-6xl lg:text-7xl xl:text-8xl"
               >
-                Masterpiece.
+                Hair Transformations.
+              </motion.div>
+            </div>
+
+            <div className="overflow-hidden">
+              <motion.div
+                initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1], delay: 1.0 }}
+                className="text-xl text-white/60 md:text-2xl lg:text-3xl xl:text-4xl"
+              >
+                in New Lambton
               </motion.div>
             </div>
           </h1>
 
+          {/* Subheading */}
           <motion.p
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.6 }}
-            className="mt-8 max-w-md text-sm leading-relaxed text-white/75 md:mt-10 md:text-lg"
+            className="mt-4 max-w-lg text-sm leading-relaxed text-white/60 md:text-base"
           >
-            Premium fades, beard grooming & styling — New Lambton's finest barbershop, crafted by hands that care about the details.
+            Men's barbering, women's haircuts, brunette colour, balayage, nanoplasty, botox, facials and private hair services — all in one modern salon.
           </motion.p>
 
+          {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.45, duration: 0.6 }}
-            className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center md:mt-10"
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.4, duration: 0.6 }}
+            className="mt-5 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
           >
-            <a href="#book" className="rounded-sm bg-gold px-8 py-4 text-center text-xs font-bold uppercase tracking-[0.3em] text-obsidian transition hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(200,169,81,0.5)]">
+            <a href="/booking" className="rounded-sm bg-gold px-8 py-4 text-center text-xs font-bold uppercase tracking-[0.3em] text-obsidian transition hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(200,169,81,0.5)]">
               Book Appointment
             </a>
-            <a href="#services" className="group flex items-center justify-center gap-3 px-2 py-4 text-xs font-bold uppercase tracking-[0.3em] text-white/80 transition hover:text-gold sm:justify-start">
+            <a href="#services" className="group flex items-center justify-center gap-3 px-2 py-4 text-xs font-bold uppercase tracking-[0.3em] text-white/70 transition hover:text-gold sm:justify-start">
               View Services
               <span className="h-px w-10 bg-current transition-all group-hover:w-16" />
             </a>
           </motion.div>
+
+          {/* Walk-ins text */}
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.7, duration: 0.5 }}
+            className="mt-3 text-xs italic text-white/40"
+          >
+            Walk-ins welcome when available
+          </motion.p>
         </motion.div>
       </div>
 
       {/* Scroll indicator */}
       <motion.a
         href="#services"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-gold"
       >
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
