@@ -54,8 +54,31 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  body { cursor: none; }
-  @media (max-width: 768px) { body { cursor: auto; } }
+
+  /* Desktop (pointer: fine): suppress ALL native cursors so only the
+     scissors CustomCursor component is visible — no double cursor. */
+  @media (pointer: fine) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
+
+  /* Touch / mobile: CustomCursor does not activate, restore native cursors. */
+  @media (pointer: coarse) {
+    *, *::before, *::after {
+      cursor: default;
+    }
+    a,
+    button,
+    [role="button"],
+    input[type="submit"],
+    input[type="button"],
+    select,
+    label[for] {
+      cursor: pointer !important;
+    }
+  }
+
   h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: 0.02em; }
 }
 

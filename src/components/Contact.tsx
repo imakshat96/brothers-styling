@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { MapPin, Clock, Phone, Instagram, ArrowRight } from "lucide-react";
+import { MapPin, Clock, Phone, Instagram, Facebook, ArrowRight } from "lucide-react";
 
 export function Contact() {
   return (
@@ -105,10 +105,19 @@ export function Contact() {
                 href="https://instagram.com/thebrothersstyling"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-white/55 transition hover:text-gold"
+                className="flex items-center gap-2 text-white/55 transition hover:text-gold"
               >
                 <Instagram size={14} />
                 @thebrothersstyling
+              </a>
+              <a
+                href="https://facebook.com/thebrothersstyling"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-white/55 transition hover:text-gold"
+              >
+                <Facebook size={14} />
+                The Brother's Styling
               </a>
             </div>
           </motion.div>

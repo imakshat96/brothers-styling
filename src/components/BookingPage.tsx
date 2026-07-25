@@ -18,24 +18,61 @@ const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
 const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
 const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
 
-const SERVICES = [
-  // Men's
-  "Fade",
-  "Skin Fade",
-  "Beard Trim",
-  "Haircut + Beard",
-  "Perming",
-  "Grey Coverage",
-  "Face Cleanup",
-  // Women's
-  "Brunette Transformations",
-  "Balayage & Foilyage",
-  "Toner & Colour Correction",
-  "Women's Haircut",
-  "Nanoplasty",
-  "Hair Botox",
-  // Other
-  "Other",
+const SERVICE_GROUPS = [
+  {
+    group: "Men's Haircuts",
+    services: ["Men's Basic Haircut", "Buzz Cut", "Pensioners Haircut"],
+  },
+  {
+    group: "Fades",
+    services: ["Burst Fade", "Taper Fade", "Drop Fade"],
+  },
+  {
+    group: "Kids Haircuts",
+    services: ["Kid's Skin Fade", "Kid's Basic Haircut", "Kid's Zero Fade"],
+  },
+  {
+    group: "Beard Trims",
+    services: ["Basic Beard Trim", "Italian Style Beard", "Beard Fade Style"],
+  },
+  {
+    group: "Haircut & Beard Combos",
+    services: ["Basic Haircut + Basic Beard Trim", "Fade Haircut + Italian Style Beard"],
+  },
+  {
+    group: "Hair Colours & Highlights",
+    services: ["Full Head Highlights", "Grey Coverage", "Fashion Color"],
+  },
+  {
+    group: "Skin Treatments",
+    services: [
+      "D-Tan",
+      "D-Tan with Charcoal Mask",
+      "Face Cleanup with Blackhead Removal",
+      "Deep Clean Facial",
+      "Face Scrub with Steam",
+    ],
+  },
+  {
+    group: "Haircuts",
+    services: ["Baby Girl's Haircut (Under 10)", "Women's Haircut", "Bang Trim"],
+  },
+  {
+    group: "Wash & Styling",
+    services: ["Head Wash", "Head Wash + Blow Dry", "Head Wash + Styling"],
+  },
+  {
+    group: "Colour Services",
+    services: ["Balayage", "Toner"],
+  },
+  {
+    group: "Chemical & Hair Treatments",
+    services: ["Nanoplasty", "Hair Botox Treatment", "Hair Perming"],
+  },
+  {
+    group: "Other",
+    services: ["Other"],
+  },
 ];
 
 const TIMES = ["Morning (9am–12pm)", "Afternoon (12pm–4pm)", "Evening (4pm–9pm)"];
@@ -252,15 +289,13 @@ export function BookingPage() {
                       className={`${inputClass} appearance-none`}
                     >
                       <option value="" disabled>Select a service…</option>
-                      <optgroup label="── Men's Services">
-                        {SERVICES.slice(0, 7).map((s) => <option key={s} value={s}>{s}</option>)}
-                      </optgroup>
-                      <optgroup label="── Women's Services">
-                        {SERVICES.slice(7, 13).map((s) => <option key={s} value={s}>{s}</option>)}
-                      </optgroup>
-                      <optgroup label="── Other">
-                        <option value="Other">Other</option>
-                      </optgroup>
+                      {SERVICE_GROUPS.map(({ group, services }) => (
+                        <optgroup key={group} label={group}>
+                          {services.map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </optgroup>
+                      ))}
                     </select>
                   </Field>
                 </div>
