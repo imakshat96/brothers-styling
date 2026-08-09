@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Play, Instagram, ArrowRight } from "lucide-react";
+import { Instagram, ArrowRight } from "lucide-react";
+import { InstagramReelEmbed } from "./InstagramReelEmbed";
 
 const beforeAfterPairs = [
   { label: "Balayage Transformation" },
@@ -8,10 +9,13 @@ const beforeAfterPairs = [
   { label: "Women's Restyle" },
 ];
 
-const reelPlaceholders = [
-  { caption: "Fresh skin fade ✂️" },
-  { caption: "Balayage reveal 🎨" },
-  { caption: "Nanoplasty result ✨" },
+// Real reels pulled live from @thebrothersstyling via Instagram's official
+// embed widget — a temporary stand-in until the client picks which photos
+// and videos he wants uploaded directly.
+const featuredReels = [
+  "https://www.instagram.com/thebrothersstyling/reel/DbtpT_DTJNh/",
+  "https://www.instagram.com/thebrothersstyling/reel/DYJdJ5nOscy/",
+  "https://www.instagram.com/thebrothersstyling/reel/DbjKrLVydWd/",
 ];
 
 export function OurWork() {
@@ -104,39 +108,19 @@ export function OurWork() {
             </a>
           </div>
 
-          {/* Reel placeholders */}
-          <div className="grid gap-4 grid-cols-3">
-            {reelPlaceholders.map((reel, i) => (
-              <motion.a
-                key={i}
-                href="https://instagram.com/thebrothersstyling"
-                target="_blank"
-                rel="noopener noreferrer"
+          {/* Real reels — live from Instagram, temporary until the client
+              picks final photos/videos to upload directly. */}
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+            {featuredReels.map((permalink, i) => (
+              <motion.div
+                key={permalink}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative overflow-hidden rounded-md border border-white/8 bg-obsidian-2"
               >
-                <div className="aspect-[9/16] w-full bg-gradient-to-b from-white/5 via-white/3 to-gold/10 transition-all duration-500 group-hover:from-white/8 group-hover:to-gold/15" />
-
-                {/* Play button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition group-hover:border-gold group-hover:text-gold">
-                    <Play size={18} fill="currentColor" />
-                  </div>
-                </div>
-
-                {/* Instagram icon top right */}
-                <div className="absolute right-3 top-3 text-white/40 group-hover:text-gold transition">
-                  <Instagram size={16} />
-                </div>
-
-                {/* Caption */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                  <p className="text-[11px] text-white/70">{reel.caption}</p>
-                </div>
-              </motion.a>
+                <InstagramReelEmbed permalink={permalink} />
+              </motion.div>
             ))}
           </div>
         </motion.div>
