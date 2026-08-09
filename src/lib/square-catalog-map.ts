@@ -99,8 +99,8 @@ export const SQUARE_SERVICE_MAP: Record<string, SquareServiceMapping> = {
 // Square team member IDs bookable for any service.
 // Vishnu Bishnoi (TMtF66_uW490dEuw) no longer works here — profile deleted
 // in Square 2026-08-09, so removed here too (a deleted team member's ID would
-// make SearchAvailability calls fail). Adarsh has a new hire's profile in
-// progress; add their team member ID below once it exists.
-export const SQUARE_TEAM_MEMBER_IDS = ["TMqIfGpz_Ye4neQt"];
+// make SearchAvailability calls fail). Krish Mehmi (TMA-Chm22oQQahjg) joined
+// as the new hire, added 2026-08-09.
+export const SQUARE_TEAM_MEMBER_IDS = ["TMqIfGpz_Ye4neQt", "TMA-Chm22oQQahjg"];
 
 export const SQUARE_LOCATION_ID_PROD = "LDV4PNFQ08GRH";
