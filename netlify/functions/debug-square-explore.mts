@@ -7,17 +7,25 @@
 // Delete this file once the Square Appointments integration is finished.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const SQUARE_ENV = process.env.SQUARE_ENV ?? "sandbox";
-const SQUARE_API_BASE =
-  SQUARE_ENV === "production" ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com";
 const SQUARE_VERSION = "2024-10-17";
 
 export default async (req: Request) => {
-  const accessToken = process.env.SQUARE_ACCESS_TOKEN;
-  const locationId = process.env.SQUARE_LOCATION_ID || process.env.VITE_SQUARE_LOCATION_ID;
+  // ?prod=1 uses dedicated, isolated read-only production credentials
+  // (SQUARE_PROD_ACCESS_TOKEN / SQUARE_PROD_LOCATION_ID). This is completely
+  // separate from SQUARE_ACCESS_TOKEN/SQUARE_ENV used by create-payment.mts,
+  // so exploring production here can never affect the live sandbox deposit
+  // payment flow.
+  const url = new URL(req.url);
+  const useProd = url.searchParams.get("prod") === "1";
+
+  const SQUARE_API_BASE = useProd ? "https://connect.squareup.com" : "https://connect.squareupsandbox.com";
+  const accessToken = useProd ? process.env.SQUARE_PROD_ACCESS_TOKEN : process.env.SQUARE_ACCESS_TOKEN;
+  const locationId = useProd
+    ? process.env.SQUARE_PROD_LOCATION_ID
+    : process.env.SQUARE_LOCATION_ID || process.env.VITE_SQUARE_LOCATION_ID;
 
   if (!accessToken) {
-    return json({ error: "SQUARE_ACCESS_TOKEN not set" }, 500);
+    return json({ error: `${useProd ? "SQUARE_PROD_ACCESS_TOKEN" : "SQUARE_ACCESS_TOKEN"} not set` }, 500);
   }
 
   const headers = {
@@ -26,7 +34,7 @@ export default async (req: Request) => {
     "Content-Type": "application/json",
   };
 
-  const results: Record<string, unknown> = { env: SQUARE_ENV, locationId };
+  const results: Record<string, unknown> = { env: useProd ? "production" : "sandbox", locationId };
 
   try {
     // Locations
