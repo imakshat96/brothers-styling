@@ -67,6 +67,7 @@ const inputClass =
 export function BookingPage() {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [depositPaid, setDepositPaid] = useState(false);
   const [depositPaymentId, setDepositPaymentId] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
@@ -102,6 +103,7 @@ export function BookingPage() {
     if (depositRequired && !depositPaid) return; // guarded by disabled button too
     if (missingSlot) return; // guarded by disabled button too
     setStatus("loading");
+    setErrorMessage(null);
 
     const preferredDate = selectedSlot
       ? new Date(selectedSlot.startAt).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
@@ -109,6 +111,45 @@ export function BookingPage() {
     const preferredTime = selectedSlot
       ? new Date(selectedSlot.startAt).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })
       : form.time;
+
+    let bookingId: string | null = null;
+
+    // For services bookable online, create the real appointment in Square
+    // first — if that fails (e.g. the slot was just taken by someone else),
+    // stop here and let the customer pick a different time rather than
+    // sending a confirmation email for a booking that doesn't actually exist.
+    if (showSlotPicker && selectedSlot) {
+      try {
+        const res = await fetch("/.netlify/functions/create-booking", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            serviceName: form.service,
+            startAt: selectedSlot.startAt,
+            teamMemberId: selectedSlot.teamMemberId,
+            durationMinutes: selectedSlot.durationMinutes,
+            fullName: form.fullName,
+            phone: form.phone,
+            email: form.email,
+            notes: form.notes,
+            depositPaymentId,
+            idempotencyKey: crypto.randomUUID(),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          setErrorMessage(data.error || "That time was just taken. Please choose another time.");
+          setStatus("error");
+          setSelectedSlot(null); // force a fresh pick — the slot may no longer be valid
+          return;
+        }
+        bookingId = data.bookingId;
+      } catch {
+        setErrorMessage("Couldn't reach the booking system. Please try again or call us directly.");
+        setStatus("error");
+        return;
+      }
+    }
 
     try {
       // EmailJS template variables — configure your template to map these fields.
@@ -126,7 +167,7 @@ export function BookingPage() {
           notes: form.notes || "None provided",
           reply_to: form.email,
           deposit_paid: depositRequired ? `$${depositAmount.toFixed(2)} (Square payment ${depositPaymentId})` : "Not required",
-          booking_source: selectedSlot ? "Live availability (auto-booked in Square)" : "Requested time (call to confirm)",
+          booking_source: bookingId ? `Auto-booked in Square (booking ${bookingId})` : "Requested time (call to confirm)",
         },
         EMAILJS_PUBLIC_KEY,
       );
@@ -136,7 +177,18 @@ export function BookingPage() {
       setDepositPaymentId(null);
       setSelectedSlot(null);
     } catch {
-      setStatus("error");
+      if (bookingId) {
+        // The real Square booking already succeeded — only the email
+        // confirmation failed, so don't tell the customer their booking failed.
+        setStatus("success");
+        setForm(EMPTY);
+        setDepositPaid(false);
+        setDepositPaymentId(null);
+        setSelectedSlot(null);
+      } else {
+        setErrorMessage(null); // use the generic fallback message
+        setStatus("error");
+      }
     }
   };
 
@@ -364,7 +416,7 @@ export function BookingPage() {
                     className="mt-5 flex items-center gap-3 rounded-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400"
                   >
                     <AlertCircle size={16} className="shrink-0" />
-                    Something went wrong. Please try calling us directly at (02) 4969 8123.
+                    {errorMessage || "Something went wrong. Please try calling us directly at (02) 4969 8123."}
                   </motion.div>
                 )}
 
