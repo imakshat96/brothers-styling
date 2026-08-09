@@ -89,13 +89,7 @@ export default async (req: Request) => {
       }
     }
 
-    // TEMPORARY: ?confirm=1 on GET actually performs the cancellation, only
-    // so the sandbox (POST-blocked to arbitrary domains) can run the one
-    // supervised live test. Remove alongside the rest of the temp scaffolding.
-    const url = new URL(req.url);
-    const confirmViaGet = req.method === "GET" && url.searchParams.get("confirm") === "1";
-
-    if (req.method === "GET" && !confirmViaGet) {
+    if (req.method === "GET") {
       return json({
         success: true,
         startAt,
@@ -109,7 +103,7 @@ export default async (req: Request) => {
       });
     }
 
-    // POST (or GET+confirm=1 for testing) — actually cancel.
+    // POST — actually cancel.
     if (alreadyCancelled) {
       return json({ success: false, error: "This booking has already been cancelled." }, 400);
     }
