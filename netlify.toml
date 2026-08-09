@@ -8,6 +8,21 @@
 [functions]
   directory = "netlify/functions"
 
+# brothersstyling.site is a secondary domain — redirect it (and its www)
+# to the primary domain, brothersstyling.com.au. Must come before the SPA
+# catch-all below, since Netlify uses the first matching redirect.
+[[redirects]]
+  from = "https://brothersstyling.site/*"
+  to = "https://brothersstyling.com.au/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.brothersstyling.site/*"
+  to = "https://brothersstyling.com.au/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/_shell.html"
