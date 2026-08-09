@@ -178,9 +178,15 @@ export default async (req: Request) => {
   }
 };
 
+// TEMPORARY: DEBUG_FORCE_200 lets the diagnostic sandbox see error bodies
+// that would otherwise come back on a non-200 status (some fetch tooling
+// hides bodies on non-2xx responses). Remove alongside the rest of the GET
+// testing scaffolding.
+const DEBUG_FORCE_200 = true;
+
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
-    status,
+    status: DEBUG_FORCE_200 ? 200 : status,
     headers: { "Content-Type": "application/json" },
   });
 }
