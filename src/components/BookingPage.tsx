@@ -7,7 +7,9 @@ import { Navbar } from "./Navbar";
 import { CustomCursor } from "./CustomCursor";
 import { FloatingCall } from "./FloatingCall";
 import { SquareDeposit } from "./SquareDeposit";
+import { SlotPicker, type SelectedSlot } from "./SlotPicker";
 import { MEN, WOMEN, getDepositAmount } from "@/lib/services-data";
+import { SQUARE_SERVICE_MAP } from "@/lib/square-catalog-map";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ACTION REQUIRED: Replace these placeholders with real values from your
@@ -67,26 +69,47 @@ export function BookingPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [depositPaid, setDepositPaid] = useState(false);
   const [depositPaymentId, setDepositPaymentId] = useState<string | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
+  // Starts true (assume bookable) so the SlotPicker renders immediately; if the
+  // live search comes back "not_bookable_online" we fall back to the old
+  // request-only date/time fields.
+  const [isBookableOnline, setIsBookableOnline] = useState(true);
 
   const today = new Date().toISOString().split("T")[0];
 
   const depositAmount = form.service ? getDepositAmount(form.service) : 0;
   const depositRequired = depositAmount > 0;
+  // Quick client-side check so we don't flash the slot picker for services we
+  // already know aren't mapped to a real Square catalog item (e.g. "Other").
+  const isMappedService = form.service !== "" && form.service !== "Other" && form.service in SQUARE_SERVICE_MAP;
+  const showSlotPicker = isMappedService && isBookableOnline;
+  const missingSlot = showSlotPicker && !selectedSlot;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // Changing the service resets any prior deposit — the amount owed may differ.
+    // Changing the service resets any prior deposit and slot selection — both may differ.
     if (name === "service") {
       setDepositPaid(false);
       setDepositPaymentId(null);
+      setSelectedSlot(null);
+      setIsBookableOnline(true);
     }
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (depositRequired && !depositPaid) return; // guarded by disabled button too
+    if (missingSlot) return; // guarded by disabled button too
     setStatus("loading");
+
+    const preferredDate = selectedSlot
+      ? new Date(selectedSlot.startAt).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+      : form.date;
+    const preferredTime = selectedSlot
+      ? new Date(selectedSlot.startAt).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })
+      : form.time;
+
     try {
       // EmailJS template variables — configure your template to map these fields.
       // Add a CC in your template to notify both the barber and receptionist.
@@ -98,11 +121,12 @@ export function BookingPage() {
           phone: form.phone,
           from_email: form.email,
           service: form.service,
-          preferred_date: form.date,
-          preferred_time: form.time,
+          preferred_date: preferredDate,
+          preferred_time: preferredTime,
           notes: form.notes || "None provided",
           reply_to: form.email,
           deposit_paid: depositRequired ? `$${depositAmount.toFixed(2)} (Square payment ${depositPaymentId})` : "Not required",
+          booking_source: selectedSlot ? "Live availability (auto-booked in Square)" : "Requested time (call to confirm)",
         },
         EMAILJS_PUBLIC_KEY,
       );
@@ -110,6 +134,7 @@ export function BookingPage() {
       setForm(EMPTY);
       setDepositPaid(false);
       setDepositPaymentId(null);
+      setSelectedSlot(null);
     } catch {
       setStatus("error");
     }
@@ -289,27 +314,37 @@ export function BookingPage() {
                   />
                 )}
 
-                {/* Row 4: Date + Time */}
-                <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  <Field label="Preferred Date *">
-                    <input
-                      name="date" type="date" required min={today}
-                      value={form.date} onChange={onChange}
-                      className={inputClass}
-                      style={{ colorScheme: "dark" }}
-                    />
-                  </Field>
-                  <Field label="Preferred Time *">
-                    <select
-                      name="time" required
-                      value={form.time} onChange={onChange}
-                      className={`${inputClass} appearance-none`}
-                    >
-                      <option value="" disabled>Select a time…</option>
-                      {TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                  </Field>
-                </div>
+                {/* Row 4: Date + Time — real live Square availability when the
+                    service is bookable online, otherwise a request-only fallback. */}
+                {showSlotPicker ? (
+                  <SlotPicker
+                    serviceName={form.service}
+                    value={selectedSlot}
+                    onChange={setSelectedSlot}
+                    onNotBookable={() => setIsBookableOnline(false)}
+                  />
+                ) : (
+                  <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                    <Field label="Preferred Date *">
+                      <input
+                        name="date" type="date" required min={today}
+                        value={form.date} onChange={onChange}
+                        className={inputClass}
+                        style={{ colorScheme: "dark" }}
+                      />
+                    </Field>
+                    <Field label="Preferred Time *">
+                      <select
+                        name="time" required
+                        value={form.time} onChange={onChange}
+                        className={`${inputClass} appearance-none`}
+                      >
+                        <option value="" disabled>Select a time…</option>
+                        {TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </Field>
+                  </div>
+                )}
 
                 {/* Row 5: Notes */}
                 <div className="mt-5">
@@ -337,7 +372,7 @@ export function BookingPage() {
                 <div className="mt-8">
                   <button
                     type="submit"
-                    disabled={status === "loading" || (depositRequired && !depositPaid)}
+                    disabled={status === "loading" || (depositRequired && !depositPaid) || missingSlot}
                     className="w-full rounded-sm bg-gold py-4 text-xs font-bold uppercase tracking-[0.3em] text-obsidian transition hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(200,169,81,0.4)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {status === "loading" ? (
@@ -346,6 +381,8 @@ export function BookingPage() {
                       </span>
                     ) : depositRequired && !depositPaid ? (
                       "Pay Deposit to Continue"
+                    ) : missingSlot ? (
+                      "Select a Time to Continue"
                     ) : (
                       "Request Appointment"
                     )}
@@ -353,7 +390,9 @@ export function BookingPage() {
                   <p className="mt-3 text-center text-xs italic text-white/35">
                     {depositRequired
                       ? "Deposit is non-refundable for no-shows. We'll call you to confirm your time."
-                      : "We'll call you to confirm your time."}
+                      : showSlotPicker
+                        ? "Your appointment is booked directly into our calendar."
+                        : "We'll call you to confirm your time."}
                   </p>
                 </div>
 
