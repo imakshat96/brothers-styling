@@ -65,6 +65,20 @@ export default async (req: Request) => {
     return json(cleanup, 200);
   }
 
+  // TEMPORARY: list bookings in a date range, to verify whether the one
+  // supervised test booking actually got created (?listFrom=...&listTo=...,
+  // ISO timestamps). Remove alongside the rest of this file once done.
+  const listFrom = url.searchParams.get("listFrom");
+  const listTo = url.searchParams.get("listTo");
+  if (listFrom && listTo) {
+    const listRes = await fetch(
+      `${SQUARE_API_BASE}/v2/bookings?location_id=${locationId}&start_at_min=${listFrom}&start_at_max=${listTo}`,
+      { headers },
+    );
+    const listData = await listRes.json();
+    return json(listData, listRes.status);
+  }
+
   const results: Record<string, unknown> = { env: useProd ? "production" : "sandbox", locationId };
 
   try {
