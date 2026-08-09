@@ -96,7 +96,11 @@ export const SQUARE_SERVICE_MAP: Record<string, SquareServiceMapping> = {
   "Toner": { catalogItemId: "KRUSUAJWJKHT6BNPBCGNNKJP", catalogVariationId: "6WRACGNPYE2RZK5EWUKIPKKF", durationMs: 1800000 },
 };
 
-/** Square team member IDs bookable for any service (both staff do all services). */
-export const SQUARE_TEAM_MEMBER_IDS = ["TMqIfGpz_Ye4neQt", "TMtF66_uW490dEuw"];
+// Square team member IDs bookable for any service.
+// Vishnu Bishnoi (TMtF66_uW490dEuw) no longer works here — profile deleted
+// in Square 2026-08-09, so removed here too (a deleted team member's ID would
+// make SearchAvailability calls fail). Adarsh has a new hire's profile in
+// progress; add their team member ID below once it exists.
+export const SQUARE_TEAM_MEMBER_IDS = ["TMqIfGpz_Ye4neQt"];
 
 export const SQUARE_LOCATION_ID_PROD = "LDV4PNFQ08GRH";
