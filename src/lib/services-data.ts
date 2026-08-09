@@ -66,11 +66,9 @@ export const MEN: Subcategory[] = [
   {
     label: "Haircut & Beard Combos",
     items: [
-      // ACTION REQUIRED: these two combos aren't priced on the public Services
-      // page — basePrice is null so no deposit is charged online until you
-      // confirm the real price and fill it in here.
-      { name: "Basic Haircut + Basic Beard Trim", price: "Ask in salon", basePrice: null, desc: "Complete grooming: clean cut and shaped beard" },
-      { name: "Fade Haircut + Italian Style Beard", price: "Ask in salon", basePrice: null, desc: "Sharp fade paired with premium beard shaping" },
+      // Prices confirmed from the client's real Square catalog (2026-08-09).
+      { name: "Basic Haircut + Basic Beard Trim", price: "$65", basePrice: 65, desc: "Complete grooming: clean cut and shaped beard" },
+      { name: "Fade Haircut + Italian Style Beard", price: "$75", basePrice: 75, desc: "Sharp fade paired with premium beard shaping" },
     ],
   },
   {
