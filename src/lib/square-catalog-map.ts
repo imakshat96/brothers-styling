@@ -103,4 +103,22 @@ export const SQUARE_SERVICE_MAP: Record<string, SquareServiceMapping> = {
 // as the new hire, added 2026-08-09.
 export const SQUARE_TEAM_MEMBER_IDS = ["TMqIfGpz_Ye4neQt", "TMA-Chm22oQQahjg"];
 
+/**
+ * Reverse lookup: given a Square catalog variation ID (from a booking's
+ * appointment_segments), find the matching website service name. Used by
+ * the cancellation page to show a human-readable service name, since
+ * Square's Booking object only stores the catalog variation ID, not our
+ * display name. Returns undefined if no match (shouldn't happen for
+ * bookings created through the website, since every online booking is
+ * created from an entry in SQUARE_SERVICE_MAP).
+ */
+export function getServiceNameByVariationId(variationId: string): string | undefined {
+  return Object.entries(SQUARE_SERVICE_MAP).find(([, m]) => m.catalogVariationId === variationId)?.[0];
+}
+
+// ─── Cancellation / refund policy ──────────────────────────────────────────
+// Full refund if cancelled 24+ hours before the appointment; no refund inside
+// the 24-hour window. Enforced automatically in netlify/functions/cancel-booking.mts.
+export const CANCELLATION_WINDOW_HOURS = 24;
+
 export const SQUARE_LOCATION_ID_PROD = "LDV4PNFQ08GRH";

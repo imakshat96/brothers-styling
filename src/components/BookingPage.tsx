@@ -75,6 +75,9 @@ export function BookingPage() {
   // live search comes back "not_bookable_online" we fall back to the old
   // request-only date/time fields.
   const [isBookableOnline, setIsBookableOnline] = useState(true);
+  // Kept after the form resets so the success screen can still show a
+  // "manage/cancel this booking" link for real Square bookings.
+  const [lastManageUrl, setLastManageUrl] = useState<string | null>(null);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -151,6 +154,15 @@ export function BookingPage() {
       }
     }
 
+    // Customers can cancel their own booking (full refund 24h+ out, per
+    // policy) via this link — only meaningful when a real Square booking
+    // was created. Add {{manage_url}} as a link in the EmailJS template.
+    const manageUrl = bookingId
+      ? `${window.location.origin}/manage-booking?bookingId=${encodeURIComponent(bookingId)}${
+          depositPaymentId ? `&paymentId=${encodeURIComponent(depositPaymentId)}` : ""
+        }`
+      : "";
+
     try {
       // EmailJS template variables — configure your template to map these fields.
       // Add a CC in your template to notify both the barber and receptionist.
@@ -168,10 +180,12 @@ export function BookingPage() {
           reply_to: form.email,
           deposit_paid: depositRequired ? `$${depositAmount.toFixed(2)} (Square payment ${depositPaymentId})` : "Not required",
           booking_source: bookingId ? `Auto-booked in Square (booking ${bookingId})` : "Requested time (call to confirm)",
+          manage_url: manageUrl,
         },
         EMAILJS_PUBLIC_KEY,
       );
       setStatus("success");
+      setLastManageUrl(manageUrl || null);
       setForm(EMPTY);
       setDepositPaid(false);
       setDepositPaymentId(null);
@@ -181,6 +195,7 @@ export function BookingPage() {
         // The real Square booking already succeeded — only the email
         // confirmation failed, so don't tell the customer their booking failed.
         setStatus("success");
+        setLastManageUrl(manageUrl || null);
         setForm(EMPTY);
         setDepositPaid(false);
         setDepositPaymentId(null);
@@ -294,8 +309,15 @@ export function BookingPage() {
                 <CheckCircle size={48} className="text-gold" strokeWidth={1.5} />
                 <h2 className="mt-6 font-display text-3xl tracking-wide">Booking Received!</h2>
                 <p className="mt-3 max-w-xs text-base text-white/60">
-                  Thanks! We'll give you a call shortly to confirm your booking.
+                  {lastManageUrl
+                    ? "You're all booked in — a confirmation has been sent to your email."
+                    : "Thanks! We'll give you a call shortly to confirm your booking."}
                 </p>
+                {lastManageUrl && (
+                  <a href={lastManageUrl} className="mt-4 text-xs uppercase tracking-widest text-white/40 underline transition hover:text-gold">
+                    Manage or cancel this booking
+                  </a>
+                )}
                 <Link
                   to="/"
                   className="mt-8 inline-block rounded-sm bg-gold px-8 py-3 text-xs font-bold uppercase tracking-[0.25em] text-obsidian transition hover:bg-gold-soft"
