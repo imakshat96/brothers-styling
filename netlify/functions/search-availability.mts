@@ -17,7 +17,7 @@ const SQUARE_VERSION = "2024-10-17";
 const SQUARE_API_BASE = "https://connect.squareup.com";
 
 export default async (req: Request) => {
-  if (req.method !== "POST") {
+  if (req.method !== "POST" && req.method !== "GET") {
     return json({ success: false, error: "Method not allowed" }, 405);
   }
 
@@ -26,11 +26,22 @@ export default async (req: Request) => {
     return json({ success: false, error: "Booking availability isn't configured yet." }, 500);
   }
 
+  // GET + query params is supported alongside the real POST+JSON path purely
+  // as a manual testing convenience (the sandbox we develop from can only
+  // reach this site via GET). The live site always uses POST.
   let body: { serviceName?: string; daysAhead?: number };
-  try {
-    body = await req.json();
-  } catch {
-    return json({ success: false, error: "Invalid request body." }, 400);
+  if (req.method === "GET") {
+    const url = new URL(req.url);
+    body = {
+      serviceName: url.searchParams.get("serviceName") ?? undefined,
+      daysAhead: url.searchParams.get("daysAhead") ? Number(url.searchParams.get("daysAhead")) : undefined,
+    };
+  } else {
+    try {
+      body = await req.json();
+    } catch {
+      return json({ success: false, error: "Invalid request body." }, 400);
+    }
   }
 
   const { serviceName } = body;
