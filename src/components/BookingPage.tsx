@@ -6,6 +6,8 @@ import { Link } from "@tanstack/react-router";
 import { Navbar } from "./Navbar";
 import { CustomCursor } from "./CustomCursor";
 import { FloatingCall } from "./FloatingCall";
+import { SquareDeposit } from "./SquareDeposit";
+import { MEN, WOMEN, getDepositAmount } from "@/lib/services-data";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ACTION REQUIRED: Replace these placeholders with real values from your
@@ -18,61 +20,20 @@ const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
 const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
 const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
 
+// Built from the shared services/pricing data (src/lib/services-data.ts) so the
+// dropdown always matches what's on the Services page and what the deposit
+// calculator knows about. Subcategories shared between Men's/Women's (e.g.
+// "Chemical & Hair Treatments") are only listed once.
+const seenGroupLabels = new Set<string>();
 const SERVICE_GROUPS = [
-  {
-    group: "Men's Haircuts",
-    services: ["Men's Basic Haircut", "Buzz Cut", "Pensioners Haircut"],
-  },
-  {
-    group: "Fades",
-    services: ["Burst Fade", "Taper Fade", "Drop Fade"],
-  },
-  {
-    group: "Kids Haircuts",
-    services: ["Kid's Skin Fade", "Kid's Basic Haircut", "Kid's Zero Fade"],
-  },
-  {
-    group: "Beard Trims",
-    services: ["Basic Beard Trim", "Italian Style Beard", "Beard Fade Style"],
-  },
-  {
-    group: "Haircut & Beard Combos",
-    services: ["Basic Haircut + Basic Beard Trim", "Fade Haircut + Italian Style Beard"],
-  },
-  {
-    group: "Hair Colours & Highlights",
-    services: ["Full Head Highlights", "Grey Coverage", "Fashion Color"],
-  },
-  {
-    group: "Skin Treatments",
-    services: [
-      "D-Tan",
-      "D-Tan with Charcoal Mask",
-      "Face Cleanup with Blackhead Removal",
-      "Deep Clean Facial",
-      "Face Scrub with Steam",
-    ],
-  },
-  {
-    group: "Haircuts",
-    services: ["Baby Girl's Haircut (Under 10)", "Women's Haircut", "Bang Trim"],
-  },
-  {
-    group: "Wash & Styling",
-    services: ["Head Wash", "Head Wash + Blow Dry", "Head Wash + Styling"],
-  },
-  {
-    group: "Colour Services",
-    services: ["Balayage", "Toner"],
-  },
-  {
-    group: "Chemical & Hair Treatments",
-    services: ["Nanoplasty", "Hair Botox Treatment", "Hair Perming"],
-  },
-  {
-    group: "Other",
-    services: ["Other"],
-  },
+  ...[...MEN, ...WOMEN]
+    .filter((sub) => {
+      if (seenGroupLabels.has(sub.label)) return false;
+      seenGroupLabels.add(sub.label);
+      return true;
+    })
+    .map((sub) => ({ group: sub.label, services: sub.items.map((i) => i.name) })),
+  { group: "Other", services: ["Other"] },
 ];
 
 const TIMES = ["Morning (9am–12pm)", "Afternoon (12pm–4pm)", "Evening (4pm–9pm)"];
@@ -104,15 +65,27 @@ const inputClass =
 export function BookingPage() {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [depositPaid, setDepositPaid] = useState(false);
+  const [depositPaymentId, setDepositPaymentId] = useState<string | null>(null);
 
   const today = new Date().toISOString().split("T")[0];
 
+  const depositAmount = form.service ? getDepositAmount(form.service) : 0;
+  const depositRequired = depositAmount > 0;
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    // Changing the service resets any prior deposit — the amount owed may differ.
+    if (name === "service") {
+      setDepositPaid(false);
+      setDepositPaymentId(null);
+    }
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (depositRequired && !depositPaid) return; // guarded by disabled button too
     setStatus("loading");
     try {
       // EmailJS template variables — configure your template to map these fields.
@@ -129,11 +102,14 @@ export function BookingPage() {
           preferred_time: form.time,
           notes: form.notes || "None provided",
           reply_to: form.email,
+          deposit_paid: depositRequired ? `$${depositAmount.toFixed(2)} (Square payment ${depositPaymentId})` : "Not required",
         },
         EMAILJS_PUBLIC_KEY,
       );
       setStatus("success");
       setForm(EMPTY);
+      setDepositPaid(false);
+      setDepositPaymentId(null);
     } catch {
       setStatus("error");
     }
@@ -300,6 +276,19 @@ export function BookingPage() {
                   </Field>
                 </div>
 
+                {/* Deposit payment — only shown for services $100+ */}
+                {depositRequired && (
+                  <SquareDeposit
+                    amount={depositAmount}
+                    serviceName={form.service}
+                    paid={depositPaid}
+                    onPaid={(paymentId) => {
+                      setDepositPaid(true);
+                      setDepositPaymentId(paymentId);
+                    }}
+                  />
+                )}
+
                 {/* Row 4: Date + Time */}
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
                   <Field label="Preferred Date *">
@@ -348,19 +337,23 @@ export function BookingPage() {
                 <div className="mt-8">
                   <button
                     type="submit"
-                    disabled={status === "loading"}
+                    disabled={status === "loading" || (depositRequired && !depositPaid)}
                     className="w-full rounded-sm bg-gold py-4 text-xs font-bold uppercase tracking-[0.3em] text-obsidian transition hover:bg-gold-soft hover:shadow-[0_0_30px_rgba(200,169,81,0.4)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {status === "loading" ? (
                       <span className="flex items-center justify-center gap-2">
                         <Loader2 size={16} className="animate-spin" /> Sending…
                       </span>
+                    ) : depositRequired && !depositPaid ? (
+                      "Pay Deposit to Continue"
                     ) : (
                       "Request Appointment"
                     )}
                   </button>
                   <p className="mt-3 text-center text-xs italic text-white/35">
-                    We'll call you to confirm your time.
+                    {depositRequired
+                      ? "Deposit is non-refundable for no-shows. We'll call you to confirm your time."
+                      : "We'll call you to confirm your time."}
                   </p>
                 </div>
 
