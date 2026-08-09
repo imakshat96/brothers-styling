@@ -36,7 +36,7 @@ interface CreateBookingBody {
 }
 
 export default async (req: Request) => {
-  if (req.method !== "POST") {
+  if (req.method !== "POST" && req.method !== "GET") {
     return json({ success: false, error: "Method not allowed" }, 405);
   }
 
@@ -45,11 +45,33 @@ export default async (req: Request) => {
     return json({ success: false, error: "Online booking isn't configured yet." }, 500);
   }
 
+  // TEMPORARY: GET + query support, added only to run the one supervised live
+  // test against production Square from a sandbox that can't make POST
+  // requests to arbitrary domains. REMOVE this GET branch immediately after
+  // that test — a state-changing endpoint must not be triggerable by a
+  // plain GET (bots/prefetchers/link-clicks could create real bookings).
   let body: CreateBookingBody;
-  try {
-    body = await req.json();
-  } catch {
-    return json({ success: false, error: "Invalid request body." }, 400);
+  if (req.method === "GET") {
+    const url = new URL(req.url);
+    const get = (k: string) => url.searchParams.get(k) ?? undefined;
+    body = {
+      serviceName: get("serviceName"),
+      startAt: get("startAt"),
+      teamMemberId: get("teamMemberId"),
+      durationMinutes: get("durationMinutes") ? Number(get("durationMinutes")) : undefined,
+      fullName: get("fullName"),
+      phone: get("phone"),
+      email: get("email"),
+      notes: get("notes"),
+      depositPaymentId: get("depositPaymentId"),
+      idempotencyKey: get("idempotencyKey"),
+    };
+  } else {
+    try {
+      body = await req.json();
+    } catch {
+      return json({ success: false, error: "Invalid request body." }, 400);
+    }
   }
 
   const { serviceName, startAt, teamMemberId, fullName, phone, email, notes, depositPaymentId, idempotencyKey } = body;

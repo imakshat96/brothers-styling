@@ -34,6 +34,37 @@ export default async (req: Request) => {
     "Content-Type": "application/json",
   };
 
+  // TEMPORARY: cleanup helper for the one supervised live booking test
+  // (?cancelBookingId=...&deleteCustomerId=...). Cancels the test booking and
+  // deletes the test customer record so nothing fake is left in the client's
+  // real Square account. Remove alongside the rest of this file once done.
+  const cancelBookingId = url.searchParams.get("cancelBookingId");
+  const deleteCustomerId = url.searchParams.get("deleteCustomerId");
+  if (cancelBookingId || deleteCustomerId) {
+    const cleanup: Record<string, unknown> = {};
+    if (cancelBookingId) {
+      const getRes = await fetch(`${SQUARE_API_BASE}/v2/bookings/${cancelBookingId}`, { headers });
+      const getData = await getRes.json();
+      const version = getData.booking?.version ?? 0;
+      const cancelRes = await fetch(`${SQUARE_API_BASE}/v2/bookings/${cancelBookingId}/cancel`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ booking_version: version }),
+      });
+      cleanup.cancelResult = await cancelRes.json();
+      cleanup.cancelStatus = cancelRes.status;
+    }
+    if (deleteCustomerId) {
+      const delRes = await fetch(`${SQUARE_API_BASE}/v2/customers/${deleteCustomerId}`, {
+        method: "DELETE",
+        headers,
+      });
+      cleanup.deleteCustomerStatus = delRes.status;
+      cleanup.deleteCustomerResult = delRes.status === 204 ? { ok: true } : await delRes.json();
+    }
+    return json(cleanup, 200);
+  }
+
   const results: Record<string, unknown> = { env: useProd ? "production" : "sandbox", locationId };
 
   try {
