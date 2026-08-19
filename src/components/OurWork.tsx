@@ -1,11 +1,22 @@
 import { motion } from "framer-motion";
 import { Instagram, ArrowRight } from "lucide-react";
+import menCuts from "@/assets/men-cuts.webp";
+import kidFade from "@/assets/kid-fade.webp";
+import menC from "@/assets/men-c.webp";
+import womenHairstyle from "@/assets/women-hairstyle.webp";
+import womanBlonde from "@/assets/woman-blonde.webp";
+import womanHairstyle from "@/assets/woman-hairstyle.webp";
 
-const beforeAfterPairs = [
-  { label: "Balayage Transformation" },
-  { label: "Skin Fade & Beard" },
-  { label: "Brunette Colour" },
-  { label: "Women's Restyle" },
+// Real client photos — 3 men's, 3 women's. Source images vary in aspect
+// ratio (some square, some tall portrait), so every tile is cropped to a
+// consistent aspect-[4/5] box with object-cover to keep the grid even.
+const portfolioPhotos = [
+  { src: menCuts, tag: "Men", label: "Fade & Hair Art" },
+  { src: kidFade, tag: "Men", label: "Textured Crop" },
+  { src: menC, tag: "Men", label: "Design Fade" },
+  { src: womenHairstyle, tag: "Women", label: "Balayage Waves" },
+  { src: womanBlonde, tag: "Women", label: "Blonde Transformation" },
+  { src: womanHairstyle, tag: "Women", label: "Curls & Highlights" },
 ];
 
 // Real reels picked from @thebrothersstyling's live account. Each tile shows
@@ -95,44 +106,31 @@ export function OurWork() {
           </p>
         </motion.div>
 
-        {/* Before / After grid */}
-        <div className="grid gap-6 sm:grid-cols-2">
-          {beforeAfterPairs.map((pair, i) => (
+        {/* Portfolio grid — real client photos, men's and women's work */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {portfolioPhotos.map((photo, i) => (
             <motion.div
-              key={i}
+              key={photo.label}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.55, delay: i * 0.08 }}
-              className="overflow-hidden rounded-md border border-white/8 bg-obsidian-2"
+              transition={{ duration: 0.55, delay: i * 0.06 }}
+              className="group relative aspect-[4/5] overflow-hidden rounded-md border border-white/8 bg-obsidian-2"
             >
-              <div className="flex">
-                {/* Before */}
-                <div className="relative flex-1">
-                  <div className="aspect-[4/5] w-full bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
-                    <span className="text-xs uppercase tracking-widest text-white/20">Photo Coming Soon</span>
-                  </div>
-                  <div className="absolute left-3 top-3 rounded-sm bg-black/60 px-2.5 py-1 text-[10px] uppercase tracking-widest text-white/70 backdrop-blur-sm">
-                    Before
-                  </div>
-                </div>
+              <img
+                src={photo.src}
+                alt={photo.label}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/10" />
 
-                {/* Divider */}
-                <div className="w-px bg-gold/20" />
-
-                {/* After */}
-                <div className="relative flex-1">
-                  <div className="aspect-[4/5] w-full bg-gradient-to-br from-gold/8 to-gold/15 flex items-center justify-center">
-                    <span className="text-xs uppercase tracking-widest text-white/20">Photo Coming Soon</span>
-                  </div>
-                  <div className="absolute left-3 top-3 rounded-sm bg-gold/20 px-2.5 py-1 text-[10px] uppercase tracking-widest text-gold backdrop-blur-sm">
-                    After
-                  </div>
-                </div>
+              <div className="absolute left-3 top-3 rounded-sm bg-black/60 px-2.5 py-1 text-[10px] uppercase tracking-widest text-white/70 backdrop-blur-sm">
+                {photo.tag}
               </div>
 
-              <div className="border-t border-white/8 px-4 py-3">
-                <span className="text-xs uppercase tracking-widest text-white/50">{pair.label}</span>
+              <div className="absolute bottom-0 left-0 right-0 px-4 py-3">
+                <span className="text-xs uppercase tracking-widest text-white/80">{photo.label}</span>
               </div>
             </motion.div>
           ))}
