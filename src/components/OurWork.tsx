@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { Play, Instagram, ArrowRight } from "lucide-react";
+import { Instagram, ArrowRight } from "lucide-react";
 
 const beforeAfterPairs = [
   { label: "Balayage Transformation" },
@@ -9,43 +8,39 @@ const beforeAfterPairs = [
   { label: "Women's Restyle" },
 ];
 
-// Real reels picked from @thebrothersstyling's live account. Each tile
-// autoplays a self-hosted video (muted, looping, no click needed) once the
-// matching file exists in /public/reels — see public/reels/README.md for
-// the exact filenames to drop in. Until then, it falls back automatically
-// to a clickable placeholder tile linking to the real reel on Instagram, so
-// the site never shows a broken video. Instagram's own official live-embed
-// widget was tried first but its auto-resize handshake doesn't complete
-// reliably in most browsers (iframes collapse to ~1px tall) — self-hosting
-// the client's own video files is the reliable path to true inline playback.
+// Real reels picked from @thebrothersstyling's live account. Each tile shows
+// a real still frame from that reel (captured from Instagram, self-hosted in
+// /public/reels so it never expires) with Instagram's own play affordance
+// baked in, and clicking opens the actual reel on Instagram to watch it
+// play. Instagram's official live-embed widget was tried first but its
+// auto-resize handshake doesn't complete reliably in most browsers (iframes
+// collapse to ~1px tall), so this is the reliable stand-in until the client
+// picks final photos/videos to upload directly.
 const featuredReels = [
   {
     url: "https://www.instagram.com/thebrothersstyling/reel/DbtpT_DTJNh/",
-    videoSrc: "/reels/reel-1.mp4",
+    thumbnail: "/reels/reel-1.jpg",
     label: "Kid's Cut",
   },
   {
     url: "https://www.instagram.com/thebrothersstyling/reel/DYJdJ5nOscy/",
-    videoSrc: "/reels/reel-2.mp4",
+    thumbnail: "/reels/reel-2.jpg",
     label: "Full Transformation",
   },
   {
     url: "https://www.instagram.com/thebrothersstyling/reel/DbjKrLVydWd/",
-    videoSrc: "/reels/reel-3.mp4",
+    thumbnail: "/reels/reel-3.jpg",
     label: "Fresh Style",
   },
 ];
 
 interface Reel {
   url: string;
-  videoSrc: string;
+  thumbnail: string;
   label: string;
 }
 
 function ReelTile({ reel, index }: { reel: Reel; index: number }) {
-  const [videoFailed, setVideoFailed] = useState(false);
-  const showVideo = !videoFailed;
-
   return (
     <motion.a
       href={reel.url}
@@ -57,36 +52,22 @@ function ReelTile({ reel, index }: { reel: Reel; index: number }) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative aspect-[9/16] block overflow-hidden rounded-md border border-white/8 bg-obsidian-2"
     >
-      {showVideo ? (
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          src={reel.videoSrc}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          onError={() => setVideoFailed(true)}
-        />
-      ) : (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-white/3 to-gold/10 transition-all duration-500 group-hover:from-white/8 group-hover:to-gold/15" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-black/40 text-white backdrop-blur-sm transition group-hover:border-gold group-hover:text-gold">
-              <Play size={18} fill="currentColor" />
-            </div>
-          </div>
-        </>
-      )}
+      <img
+        src={reel.thumbnail}
+        alt={reel.label}
+        loading="lazy"
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-black/10 transition group-hover:bg-black/0" />
 
       {/* Instagram icon top right */}
-      <div className="absolute right-3 top-3 text-white/40 group-hover:text-gold transition">
+      <div className="absolute right-3 top-3 text-white/70 drop-shadow group-hover:text-gold transition">
         <Instagram size={16} />
       </div>
 
       {/* Label */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-        <p className="text-[11px] text-white/70">{reel.label}</p>
+        <p className="text-[11px] text-white/80">{reel.label}</p>
       </div>
     </motion.a>
   );
@@ -182,9 +163,8 @@ export function OurWork() {
             </a>
           </div>
 
-          {/* Real reels — autoplay inline once the video file exists in
-              /public/reels, otherwise fall back to a clickable placeholder
-              linking to the real reel on Instagram. */}
+          {/* Real reels — real thumbnail, click opens the actual reel on
+              Instagram to watch it play. */}
           <div className="grid gap-4 grid-cols-3">
             {featuredReels.map((reel, i) => (
               <ReelTile key={reel.url} reel={reel} index={i} />
